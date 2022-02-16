@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import { ThemeProvider } from "styled-components";
+import { GameContainer } from "./components/GameContainer";
+import { darkTheme } from "./components/styles/Theme";
+import { getRandNum, gameInit, handleKeyDown } from "./utils";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => {
+ const [arr, setArr] = useState([]);
+
+ useEffect(() => {
+  arr.length <= 0 && setArr(gameInit());
+
+  window.addEventListener("keydown", handleKeyDown);
+
+  return () => {
+   window.removeEventListener("keydown", handleKeyDown);
+  };
+ }, [arr]);
+
+ return (
+  <ThemeProvider theme={darkTheme}>
+   {/* <GlobalComponents /> */}
+   <div className="App">
+    <GameContainer arr={arr} />
+
+    <button onClick={gameInit}>Reset</button>
+   </div>
+  </ThemeProvider>
+ );
+};
 
 export default App;
