@@ -24,30 +24,7 @@ const getRandNum = (minNum, maxNum) => {
  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-const handleKeyDown = (event) => {
- switch (event.keyCode) {
-  case 37: // left || A
-  case 65:
-   updateBlock(arr, "left");
-   break;
-  case 38: // up || W
-  case 87:
-   updateBlock(arr, "up");
-   break;
-  case 39: // right || D
-  case 68:
-   updateBlock(arr, "right");
-   break;
-  case 40: // down || S
-  case 83:
-   updateBlock(arr, "down");
-   break;
-  default:
-   console.log(`Default.`);
- }
-};
-
-const updateBlock = (arr, key) => {
+const updateBlock = (arr, setArr, key) => {
  const updatedArr = [...arr];
  let changeState = false;
  let filledBoxID = [];
@@ -62,6 +39,7 @@ const updateBlock = (arr, key) => {
   let lastIndex = value - 1;
   let sameValues = false;
 
+  console.log("value", value);
   // up key
   if (key === "up")
    while (value > 4) {
@@ -99,7 +77,7 @@ const updateBlock = (arr, key) => {
      console.log("same number");
      sameValues = true;
      break;
-    } else if (arr[value - 1].fill) break;
+    } else break;
     if (value === 1 || value === 5 || value === 9 || value === 13) break;
    }
 
@@ -112,11 +90,12 @@ const updateBlock = (arr, key) => {
      console.log("same number");
      sameValues = true;
      break;
-    } else if (arr[value - 1].fill) break;
+    } else break;
     if (value === 4 || value === 8 || value === 12 || value === 16) break;
    }
 
   // if it moved then updates boxes
+  console.log("value", value);
   if (sameValues) {
    updatedArr[value - 1]["number"] = updatedArr[value - 1]["number"] + updatedArr[value - 1]["number"];
    updatedArr[id - 1]["fill"] = false;
@@ -149,4 +128,19 @@ const updateBlock = (arr, key) => {
  setArr(updatedArr);
 };
 
-export { getRandNum, gameInit, handleKeyDown, updateBlock };
+// const movementLogic = (arr, value, key, increment, id, lastIndex, sameValues) => {
+//  console.log("value", value);
+//  //arr, value, key, 4, id, lastIndex, sameValues
+//  while (key === "up" ? value > 4 : key === "down" ? value < 13 : false) {
+//   value = value + increment;
+//   // empty boxes, keep looping
+//   if (arr[value - 1].fill === false) lastIndex = value - 1;
+//   // after collision, check if same number to combine
+//   else if (arr[value - 1].number === arr[id - 1].number) {
+//    console.log("same number");
+//    sameValues = true;
+//    break;
+//   } else break;
+//  }
+// };
+export { getRandNum, gameInit, updateBlock };
