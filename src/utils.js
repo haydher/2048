@@ -34,68 +34,93 @@ const updateBlock = (arr, setArr, key) => {
  if (key === "right" || key === "down") filledBoxID.sort((a, b) => b - a);
 
  for (let i = 0; i < filledBoxID.length; i++) {
+  console.log("test");
   let id = filledBoxID[i];
   let value = id;
   let lastIndex = value - 1;
   let sameValues = false;
 
-  console.log("value", value);
+  let [returnLastIndex, returnSameValues, returnValue] = movementLogic(arr, value, key, id);
+  lastIndex = returnLastIndex;
+  sameValues = returnSameValues;
+  value = returnValue;
+
   // up key
-  if (key === "up")
-   while (value > 4) {
-    value = value - 4;
-    // empty boxes, keep looping
-    if (arr[value - 1].fill === false) lastIndex = value - 1;
-    // after collision, check if same number to combine
-    else if (arr[value - 1].number === arr[id - 1].number) {
-     console.log("same number");
-     sameValues = true;
-     break;
-    } else break;
-   }
+  // if (key === "up") {
+  //  let [returnLastIndex, returnSameValues, returnValue] = movementLogic(arr, value, key, id);
+  //  lastIndex = returnLastIndex;
+  //  sameValues = returnSameValues;
+  //  value = returnValue;
+  // }
+  // while (value > 4) {
+  //  value = value - 4;
+  //  // empty boxes, keep looping
+  //  if (arr[value - 1].fill === false) lastIndex = value - 1;
+  //  // after collision, check if same number to combine
+  //  else if (arr[value - 1].number === arr[id - 1].number) {
+  //   console.log("same number");
+  //   sameValues = true;
+  //   break;
+  //  } else break;
+  // }
 
   // down key
-  if (key === "down")
-   while (value < 13) {
-    value = value + 4;
-    // empty boxes, keep looping
-    if (arr[value - 1].fill === false) lastIndex = value - 1;
-    // after collision, check if same number to combine
-    else if (arr[value - 1].number === arr[id - 1].number) {
-     console.log("same number");
-     sameValues = true;
-     break;
-    } else break;
-   }
+  // if (key === "down") {
+  //  let [returnLastIndex, returnSameValues, returnValue] = movementLogic(arr, value, key, id);
+  //  lastIndex = returnLastIndex;
+  //  sameValues = returnSameValues;
+  //  value = returnValue;
+  // }
+  // while (value < 13) {
+  //  value = value + 4;
+  //  // empty boxes, keep looping
+  //  if (arr[value - 1].fill === false) lastIndex = value - 1;
+  //  // after collision, check if same number to combine
+  //  else if (arr[value - 1].number === arr[id - 1].number) {
+  //   console.log("same number");
+  //   sameValues = true;
+  //   break;
+  //  } else break;
+  // }
 
   // left key
-  if (key === "left")
-   while (value > 1 && value != 1 && value != 5 && value != 9 && value != 13) {
-    value--;
-    if (arr[value - 1].fill === false) lastIndex = value - 1;
-    else if (arr[value - 1].number === arr[id - 1].number) {
-     console.log("same number");
-     sameValues = true;
-     break;
-    } else break;
-    if (value === 1 || value === 5 || value === 9 || value === 13) break;
-   }
+  // if (key === "left") {
+  //  let [returnLastIndex, returnSameValues, returnValue] = movementLogic(arr, value, key, id);
+  //  lastIndex = returnLastIndex;
+  //  sameValues = returnSameValues;
+  //  value = returnValue;
+  // }
+  // while (value > 1 && value != 1 && value != 5 && value != 9 && value != 13) {
+  //  value--;
+  //  if (arr[value - 1].fill === false) lastIndex = value - 1;
+  //  else if (arr[value - 1].number === arr[id - 1].number) {
+  //   console.log("same number");
+  //   sameValues = true;
+  //   break;
+  //  } else break;
+  //  if (value === 1 || value === 5 || value === 9 || value === 13) break;
+  // }
 
   // left right
-  if (key === "right")
-   while (value < 16 && value != 4 && value != 8 && value != 12 && value != 16) {
-    value++;
-    if (arr[value - 1].fill === false) lastIndex = value - 1;
-    else if (arr[value - 1].number === arr[id - 1].number) {
-     console.log("same number");
-     sameValues = true;
-     break;
-    } else break;
-    if (value === 4 || value === 8 || value === 12 || value === 16) break;
-   }
+  // if (key === "right") {
+  //  let [returnLastIndex, returnSameValues, returnValue] = movementLogic(arr, value, key, id);
+  //  lastIndex = returnLastIndex;
+  //  sameValues = returnSameValues;
+  //  value = returnValue;
+  // }
+
+  // while (value < 16 && value != 4 && value != 8 && value != 12 && value != 16) {
+  //  value++;
+  //  if (arr[value - 1].fill === false) lastIndex = value - 1;
+  //  else if (arr[value - 1].number === arr[id - 1].number) {
+  //   console.log("same number");
+  //   sameValues = true;
+  //   break;
+  //  } else break;
+  //  if (value === 4 || value === 8 || value === 12 || value === 16) break;
+  // }
 
   // if it moved then updates boxes
-  console.log("value", value);
   if (sameValues) {
    updatedArr[value - 1]["number"] = updatedArr[value - 1]["number"] + updatedArr[value - 1]["number"];
    updatedArr[id - 1]["fill"] = false;
@@ -123,24 +148,62 @@ const updateBlock = (arr, setArr, key) => {
  };
  getNewBox();
 
- updatedArr[newBox - 1]["fill"] = true;
- updatedArr[newBox - 1]["number"] = Math.round(Math.random()) === 0 ? 2 : 4;
+ // updatedArr[newBox - 1]["fill"] = true;
+ // updatedArr[newBox - 1]["number"] = Math.round(Math.random()) === 0 ? 2 : 4;
  setArr(updatedArr);
 };
 
-// const movementLogic = (arr, value, key, increment, id, lastIndex, sameValues) => {
-//  console.log("value", value);
-//  //arr, value, key, 4, id, lastIndex, sameValues
-//  while (key === "up" ? value > 4 : key === "down" ? value < 13 : false) {
-//   value = value + increment;
-//   // empty boxes, keep looping
-//   if (arr[value - 1].fill === false) lastIndex = value - 1;
-//   // after collision, check if same number to combine
-//   else if (arr[value - 1].number === arr[id - 1].number) {
-//    console.log("same number");
-//    sameValues = true;
-//    break;
-//   } else break;
-//  }
-// };
+const movementLogic = (arr, value, key, id) => {
+ let lastIndex = value - 1;
+ let sameValues = false;
+
+ while (
+  key === "up"
+   ? value > 4
+   : key === "down"
+   ? value < 13
+   : key === "left"
+   ? value > 1 && value != 1 && value != 5 && value != 9 && value != 13
+   : key === "right"
+   ? value < 16 && value != 4 && value != 8 && value != 12 && value != 16
+   : false
+ ) {
+  console.log(`in ${key} loop`);
+  console.log("value before", value);
+  value =
+   key === "up"
+    ? value - 4
+    : key === "down"
+    ? value + 4
+    : key === "left"
+    ? value - 1
+    : key === "right"
+    ? value + 1
+    : value;
+
+  console.log("value after", value);
+  // empty boxes, keep looping
+  if (arr[value - 1].fill === false) lastIndex = value - 1;
+  // after collision, check if same number to combine
+  else if (arr[value - 1].number === arr[id - 1].number) {
+   console.log("same number");
+   sameValues = true;
+   break;
+  } else break;
+
+  //
+  //
+  if (
+   key === "left"
+    ? value === 1 || value === 5 || value === 9 || value === 13
+    : key === "right"
+    ? value === 4 || value === 8 || value === 12 || value === 16
+    : false
+  )
+   break;
+ }
+ console.log("lastIndex", lastIndex);
+ console.log("sameValues", sameValues);
+ return [lastIndex, sameValues, value];
+};
 export { getRandNum, gameInit, updateBlock };
