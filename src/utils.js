@@ -11,6 +11,8 @@ const gameInit = () => {
    id: i + 1,
    fill: [...initRandNum].includes(i + 1) && true,
    number: Math.round(Math.random()) === 0 ? 2 : 4,
+   oldIndex: i,
+   lastKey: "",
   });
  }
  return initialGameArr;
@@ -25,134 +27,112 @@ const getRandNum = (minNum, maxNum) => {
 };
 
 const updateBlock = (arr, setArr, key) => {
- const updatedArr = [...arr];
+ // copy of the array to mutate
+ const updatedArr = [...arr]; // output [{...}, {...}, {...}]
+
+ // to see if anything changed, otherwise return without recalculating
  let changeState = false;
+
+ // ids of active objects in the array, not the index
  let filledBoxID = [];
+
+ // get the ids of active boxes
  arr.filter((obj) => obj.fill === true && filledBoxID.push(obj.id));
 
  // sort array descending so it loops over right/down first
  if (key === "right" || key === "down") filledBoxID.sort((a, b) => b - a);
 
+ // loop over all active boxes
  for (let i = 0; i < filledBoxID.length; i++) {
-  console.log("test");
   let id = filledBoxID[i];
+
+  // value updates / change with each while loop
+  // same as id but this mutates to show updated position whereas id stays the same
   let value = id;
+
+  // last index before the last iteration of the while loop
+  // value = id of obj, starts with 1, to get index, subtract 1
   let lastIndex = value - 1;
+
+  // if two boxes are same, use it to combine them
   let sameValues = false;
 
-  let [returnLastIndex, returnSameValues, returnValue] = movementLogic(arr, value, key, id);
-  lastIndex = returnLastIndex;
-  sameValues = returnSameValues;
-  value = returnValue;
+  // compute the movements
+  let [returnedLastIndex, returnedSameValues, returnedValue] = movementLogic(arr, value, key, id);
 
-  // up key
-  // if (key === "up") {
-  //  let [returnLastIndex, returnSameValues, returnValue] = movementLogic(arr, value, key, id);
-  //  lastIndex = returnLastIndex;
-  //  sameValues = returnSameValues;
-  //  value = returnValue;
-  // }
-  // while (value > 4) {
-  //  value = value - 4;
-  //  // empty boxes, keep looping
-  //  if (arr[value - 1].fill === false) lastIndex = value - 1;
-  //  // after collision, check if same number to combine
-  //  else if (arr[value - 1].number === arr[id - 1].number) {
-  //   console.log("same number");
-  //   sameValues = true;
-  //   break;
-  //  } else break;
-  // }
+  // update the values after block moves
+  lastIndex = returnedLastIndex; // int
+  sameValues = returnedSameValues; // bool
+  value = returnedValue; // int
 
-  // down key
-  // if (key === "down") {
-  //  let [returnLastIndex, returnSameValues, returnValue] = movementLogic(arr, value, key, id);
-  //  lastIndex = returnLastIndex;
-  //  sameValues = returnSameValues;
-  //  value = returnValue;
-  // }
-  // while (value < 13) {
-  //  value = value + 4;
-  //  // empty boxes, keep looping
-  //  if (arr[value - 1].fill === false) lastIndex = value - 1;
-  //  // after collision, check if same number to combine
-  //  else if (arr[value - 1].number === arr[id - 1].number) {
-  //   console.log("same number");
-  //   sameValues = true;
-  //   break;
-  //  } else break;
-  // }
-
-  // left key
-  // if (key === "left") {
-  //  let [returnLastIndex, returnSameValues, returnValue] = movementLogic(arr, value, key, id);
-  //  lastIndex = returnLastIndex;
-  //  sameValues = returnSameValues;
-  //  value = returnValue;
-  // }
-  // while (value > 1 && value != 1 && value != 5 && value != 9 && value != 13) {
-  //  value--;
-  //  if (arr[value - 1].fill === false) lastIndex = value - 1;
-  //  else if (arr[value - 1].number === arr[id - 1].number) {
-  //   console.log("same number");
-  //   sameValues = true;
-  //   break;
-  //  } else break;
-  //  if (value === 1 || value === 5 || value === 9 || value === 13) break;
-  // }
-
-  // left right
-  // if (key === "right") {
-  //  let [returnLastIndex, returnSameValues, returnValue] = movementLogic(arr, value, key, id);
-  //  lastIndex = returnLastIndex;
-  //  sameValues = returnSameValues;
-  //  value = returnValue;
-  // }
-
-  // while (value < 16 && value != 4 && value != 8 && value != 12 && value != 16) {
-  //  value++;
-  //  if (arr[value - 1].fill === false) lastIndex = value - 1;
-  //  else if (arr[value - 1].number === arr[id - 1].number) {
-  //   console.log("same number");
-  //   sameValues = true;
-  //   break;
-  //  } else break;
-  //  if (value === 4 || value === 8 || value === 12 || value === 16) break;
-  // }
-
-  // if it moved then updates boxes
+  // if same numbers, then combine
   if (sameValues) {
-   updatedArr[value - 1]["number"] = updatedArr[value - 1]["number"] + updatedArr[value - 1]["number"];
+   // combine the two boxes
+   // adds its own value to itself to double to points
+   updatedArr[value - 1]["number"] += updatedArr[value - 1]["number"];
+
+   // mark the current box false
    updatedArr[id - 1]["fill"] = false;
+
+   // mark the new box active
    updatedArr[value - 1]["fill"] = true;
+
+   // update if array changed
    changeState = true;
   }
   // if it moved then updates boxes
   else if (lastIndex != id - 1) {
+   // mark the current box false
    updatedArr[id - 1]["fill"] = false;
+
+   // mark the new box (obj) active
    updatedArr[lastIndex]["fill"] = true;
+
+   // update the number of obj where the box has moved to the new number
    updatedArr[lastIndex]["number"] = updatedArr[id - 1]["number"];
+
+   // reset the oldIndex of the old box
+   updatedArr[id - 1]["oldIndex"] = id - 1;
+
+   // update if array changed
    changeState = true;
   }
+
+  //
+  //
+  //
+  //
+  //
+  updatedArr[lastIndex]["oldIndex"] = id - 1;
  }
 
- // if nothing changed then return
+ // if nothing changed then return without changing the state
  if (!changeState) return;
 
- // get a new box
+ // make a new active box
  let newBox = 1;
- const getNewBox = () => {
+
+ // recursively keep getting new numbers if the random number is already taken by another active box
+ (function getNewBox() {
+  // update the variable with new number for active index
   newBox = getRandNum(1, 16);
+  // if number taken, redo it
   if (updatedArr[newBox - 1].fill === true) getNewBox();
   return;
- };
- getNewBox();
+ })();
 
- // updatedArr[newBox - 1]["fill"] = true;
- // updatedArr[newBox - 1]["number"] = Math.round(Math.random()) === 0 ? 2 : 4;
+ // make a new box after move
+ //  updatedArr[newBox - 1]["fill"] = true;
+ //  updatedArr[newBox - 1]["number"] = Math.round(Math.random()) === 0 ? 2 : 4;
+
+ // register the last key
+ updatedArr.forEach((elem) => (elem.lastKey = key));
+
+ // update the state with the mutated array
  setArr(updatedArr);
 };
 
+// compute how many boxes to move, logic of movements
 const movementLogic = (arr, value, key, id) => {
  let lastIndex = value - 1;
  let sameValues = false;
@@ -168,8 +148,7 @@ const movementLogic = (arr, value, key, id) => {
    ? value < 16 && value != 4 && value != 8 && value != 12 && value != 16
    : false
  ) {
-  console.log(`in ${key} loop`);
-  console.log("value before", value);
+  // how many boxes to move after each loop
   value =
    key === "up"
     ? value - 4
@@ -181,18 +160,16 @@ const movementLogic = (arr, value, key, id) => {
     ? value + 1
     : value;
 
-  console.log("value after", value);
-  // empty boxes, keep looping
+  // empty boxes, keep looping, store index before collision
   if (arr[value - 1].fill === false) lastIndex = value - 1;
-  // after collision, check if same number to combine
+  // if collision, check if same number to combine
   else if (arr[value - 1].number === arr[id - 1].number) {
-   console.log("same number");
    sameValues = true;
    break;
   } else break;
 
   //
-  //
+  // for left and right, check boundaries
   if (
    key === "left"
     ? value === 1 || value === 5 || value === 9 || value === 13
@@ -202,8 +179,9 @@ const movementLogic = (arr, value, key, id) => {
   )
    break;
  }
- console.log("lastIndex", lastIndex);
- console.log("sameValues", sameValues);
+
+ // return updated array
  return [lastIndex, sameValues, value];
 };
+
 export { getRandNum, gameInit, updateBlock };
