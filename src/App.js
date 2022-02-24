@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { ThemeProvider } from "styled-components";
 import { Button } from "./components/Button";
+import { Footer } from "./components/Footer";
 import { GameContainer } from "./components/GameContainer";
 import { GameHeader } from "./components/GameHeader";
+import { Guide } from "./components/Guide";
+import { Popup } from "./components/Popup";
 import { GlobalComponents } from "./components/styles/GlobalComponents";
 import { darkTheme } from "./components/styles/Theme";
 import { gameInit, updateBlock } from "./utils";
@@ -31,6 +34,9 @@ const App = () => {
  // track score of user
  const [userScore, setUserScore] = useState(0);
 
+ // show popup
+ const [popup, setPopup] = useState(localStorage.getItem("popup") === "false" ? false : true);
+
  // hold the state of game, if no more possible moves left, set to true
  const [endGame, setEndGame] = useState(false);
 
@@ -49,7 +55,7 @@ const App = () => {
   return () => {
    window.removeEventListener("keydown", handleKeyDown);
   };
- }, [arr]);
+ }, [arr, popup]);
 
  const handleKeyDown = (event) => {
   setStart(true);
@@ -82,9 +88,11 @@ const App = () => {
   <ThemeProvider theme={darkTheme}>
    <GlobalComponents />
    <div className="App">
-    <GameHeader score={userScore} />
+    {popup && <Popup setPopup={setPopup} />}
+    <GameHeader score={userScore} handleReset={handleReset} />
     <GameContainer arr={arr} start={start} endGame={endGame} handleReset={handleReset} />
-    <Button onClick={handleReset} />
+    <Guide />
+    <Footer />
    </div>
   </ThemeProvider>
  );

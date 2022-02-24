@@ -2,9 +2,9 @@ import styled from "styled-components";
 
 export const ButtonStyle = styled.button`
  background-color: #fb8;
- margin-top: 16px;
  padding: 12px 32px;
  margin: 0 auto;
+ margin-top: 16px;
  font-size: 16px;
  border-radius: 5px;
  border: none;

@@ -1,7 +1,8 @@
 import React from "react";
+import { Button } from "./Button";
 import { GameHeaderStyle } from "./styles/GameHeaderStyle";
 
-export const GameHeader = ({ score }) => {
+export const GameHeader = ({ score, handleReset }) => {
  return (
   <GameHeaderStyle>
    <div className="header">
@@ -23,11 +24,9 @@ export const GameHeader = ({ score }) => {
     </div>
    </div>
 
-   <div className="guide">
-    <p>
-     <b>HOW TO PLAY:</b> Use your <b>arrow</b> or <b>A W S D</b> keys to move the tiles. Tiles with the same number{" "}
-     <b>merge into one</b> when they touch. Add them up to reach <b>2048!</b>
-    </p>
+   <div className="buttons">
+    <p>How to play</p>
+    <Button onClick={handleReset} />
    </div>
   </GameHeaderStyle>
  );

@@ -54,4 +54,18 @@ export const GameHeaderStyle = styled.div`
    }
   }
  }
+
+ .buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  p {
+   font-weight: 600;
+   text-decoration: underline;
+  }
+  button {
+   margin: 0;
+  }
+ }
 `;
