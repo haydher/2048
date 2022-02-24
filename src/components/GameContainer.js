@@ -1,93 +1,46 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ChildStyle, FilledBox, GameContainerStyle } from "./styles/GameContainerStyle";
-import { Transition, useTransition, animated } from "react-spring";
-import { Animate, AnimateKeyframes, AnimateGroup } from "react-simple-animate";
+import { ChildStyle, GameContainerStyle } from "./styles/GameContainerStyle";
+import { AnimateKeyframes } from "react-simple-animate";
 
-export const GameContainer = ({ arr }) => {
+export const GameContainer = ({ arr, start }) => {
+ // get the ref of parent element to calculate the top/left offset of each tile to later move them
  const childContainerRef = useRef(null);
 
- const [posIndex, setPosIndex] = useState([]);
+ // holds the array of top/left offsets
+ const [elemOffset, setElemOffset] = useState([]);
  useEffect(() => {
   let box = childContainerRef.current && childContainerRef.current.children;
 
   let tempArr = [];
-  // if (tempArr.length <= 0 && posIndex.length <= 0) {
-  for (let index = 0; index < box.length; index++) {
-   //  console.log("box[index]", box[index].children.length);
-   //  console.log("box[index] ", box[index].children[0]?.offsetLeft);
-   //  console.log("box[index] ", box[index].children[0]?.offsetTop);
-   //  box[index].children[0]?.style.top = `100px`
-
-   tempArr.push({
-    top: box[index].offsetTop,
-    left: box[index].offsetLeft,
-   });
+  if (tempArr.length <= 0 && elemOffset.length <= 0) {
+   for (let index = 0; index < box.length; index++) {
+    tempArr.push({
+     top: box[index].offsetTop,
+     left: box[index].offsetLeft,
+    });
+   }
+   setElemOffset(tempArr);
   }
-  setPosIndex(tempArr);
-  // }
  }, [childContainerRef, arr]);
 
- const showClass = useRef(null);
- const [showClassState, setShowClass] = useState(true);
-
- //  useEffect(() => {
- //   console.log("function called in second useEffect");
- //   console.log("showClass", showClass && showClass.current);
- //   //  setShowClass((oldVale) => (oldVale = true));
- //   //  showClass.current &&
- //   //   setTimeout(() => {
- //   //    setShowClass((oldVale) => (oldVale = false));
- //   //   }, 500);
- //  }, [showClass, arr]);
-
- //  // toggle the active class from each card
- //  const [active, setActive] = useState(null);
- //  // toggle active class on each note
- //  const toggleActive = (index, scrollContainer) => {
- //   if (scrollContainer !== undefined) {
- //    scrollContainer.current.className.includes("active") ? setActive(0) : setActive(index);
- //    requestAnimationFrame(() => {
- //     scrollContainer.current.scrollIntoView({ behavior: "smooth" });
- //    });
- //   } else setActive(0);
- //  };
-
- //  const transitions = useTransition(arr, {
- //   from: (item) => async (next) => {
- //    await next({ x: posIndex[item.oldIndex].left, y: posIndex[item.oldIndex]?.top, opacity: 0.2 });
- //   },
- //   enter: (item) => (next) => {
- //    console.log("item", item);
- //    console.log("next", next);
- //    next({ transform: `translate(${posIndex[item - 1]?.left}px, ${posIndex[item - 1]?.top}px)`, opacity: 0.9 });
- //   },
- //   leave: { opacity: 1, x: 0, y: 0, delay: 1000 },
- //  });
-
+ // calculate the movement of the tile
  const getTransform = (elem) => {
-  let tempArr = [];
+  // if game hasnt started yet then dont pass the animation
+  if (!start) return [];
 
-  if (elem.lastKey == "left")
-   tempArr = [`transform: translate(${posIndex[elem.oldIndex]?.left}px, 0px)`, `transform: translate(0px, 0px)`];
-  else if (elem.lastKey == "right")
-   tempArr = [`transform: translate(${-posIndex[elem.id - 1]?.left}px, 0px)`, `transform: translate(0px, 0px)`];
-  if (elem.lastKey == "up")
-   tempArr = [`transform: translate(0px, ${posIndex[elem.oldIndex]?.top}px)`, `transform: translate(0px, 0px)`];
-  else if (elem.lastKey == "down")
-   tempArr = [`transform: translate(0px, -${posIndex[elem.id - 1]?.top}px)`, `transform: translate(0px, 0px)`];
-
-  return tempArr;
-  // return [
-  //  `transform: translate(${posIndex[elem.oldIndex]?.left}px, ${posIndex[elem.oldIndex]?.top}px)`,
-  //  `transform: translate(${posIndex[index]?.left}px, ${posIndex[index]?.top}px)`,
-  // ];
+  // initially the positions of the tiles are off the screen by 60 pixels, the 120 bring them back to their original place
+  // if the tile were not off the screen, they would flicker every time the tiles moved because the location would update
+  // before the tiles had time to animate
+  return [
+   `transform: translate(${elemOffset[elem.oldIndex]?.left + 120}px, ${elemOffset[elem.oldIndex]?.top + 120}px)`,
+   `transform: translate(${elemOffset[elem.id - 1]?.left + 120}px, ${elemOffset[elem.id - 1]?.top + 120}px)`,
+  ];
  };
-
  return (
   <GameContainerStyle ref={childContainerRef}>
    {arr.length > 0 &&
     arr.map((elem, index) => (
-     <ChildStyle key={index}>
+     <ChildStyle key={index} gameStart={start} newTile={elem.newTile}>
       {elem.fill && (
        <AnimateKeyframes
         play
@@ -96,11 +49,13 @@ export const GameContainer = ({ arr }) => {
         duration={0.2}
         keyframes={getTransform(elem)}
         // keyframes={[
-        //   `transform: translate(${posIndex[elem.oldIndex]?.left}px, ${posIndex[elem.oldIndex]?.top}px)`,
-        //   `transform: translate(${posIndex[index]?.left}px, ${posIndex[index]?.top}px)`,
-        //  ]}
+        //  `transform: translate(${elemOffset[elem.oldIndex]?.left + 120}px, ${elemOffset[elem.oldIndex]?.top + 120}px)`,
+        //  `transform: translate(${elemOffset[index]?.left + 120}px, ${elemOffset[index]?.top + 120}px)`,
+        // ]}
        >
-        <div className={`childFill tile${elem.number}`}>{elem.number}</div>
+        <div className={elem.newTile ? `childFill tile${elem.number} scaleNewTile` : `childFill tile${elem.number}`}>
+         {elem.number}
+        </div>
        </AnimateKeyframes>
       )}
      </ChildStyle>

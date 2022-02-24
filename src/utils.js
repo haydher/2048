@@ -13,6 +13,7 @@ const gameInit = () => {
    number: Math.round(Math.random()) === 0 ? 2 : 4,
    oldIndex: i,
    lastKey: "",
+   newTile: true,
   });
  }
  return initialGameArr;
@@ -98,12 +99,12 @@ const updateBlock = (arr, setArr, key) => {
    changeState = true;
   }
 
-  //
-  //
-  //
-  //
-  //
+  // update the index of old array
   updatedArr[lastIndex]["oldIndex"] = id - 1;
+ }
+
+ for (let i = 0; i < updatedArr.length; i++) {
+  updatedArr[i]["newTile"] = false;
  }
 
  // if nothing changed then return without changing the state
@@ -122,8 +123,9 @@ const updateBlock = (arr, setArr, key) => {
  })();
 
  // make a new box after move
- //  updatedArr[newBox - 1]["fill"] = true;
- //  updatedArr[newBox - 1]["number"] = Math.round(Math.random()) === 0 ? 2 : 4;
+ updatedArr[newBox - 1]["fill"] = true;
+ updatedArr[newBox - 1]["number"] = Math.round(Math.random()) === 0 ? 2 : 4;
+ updatedArr[newBox - 1]["newTile"] = true;
 
  // register the last key
  updatedArr.forEach((elem) => (elem.lastKey = key));
@@ -184,4 +186,22 @@ const movementLogic = (arr, value, key, id) => {
  return [lastIndex, sameValues, value];
 };
 
-export { getRandNum, gameInit, updateBlock };
+// not used atm
+// calculate the movement of the tiles
+const getTransform = (elem, elemOffset) => {
+ // since the animation takes arr for keyframes, this holds the animations
+ let tempArr = [];
+
+ if (elem.lastKey == "left")
+  tempArr = [`transform: translate(${elemOffset[elem.oldIndex]?.left}px, 0px)`, `transform: translate(0px, 0px)`];
+ else if (elem.lastKey == "right")
+  tempArr = [`transform: translate(${-elemOffset[elem.id - 1]?.left}px, 0px)`, `transform: translate(0px, 0px)`];
+ if (elem.lastKey == "up")
+  tempArr = [`transform: translate(0px, ${elemOffset[elem.oldIndex]?.top}px)`, `transform: translate(0px, 0px)`];
+ else if (elem.lastKey == "down")
+  tempArr = [`transform: translate(0px, -${elemOffset[elem.id - 1]?.top}px)`, `transform: translate(0px, 0px)`];
+
+ return tempArr;
+};
+
+export { getRandNum, gameInit, updateBlock, getTransform };

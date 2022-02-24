@@ -14,6 +14,8 @@ export const GameContainerStyle = styled.div`
  padding: 5px;
  border-radius: 7px;
  position: relative;
+
+ overflow: hidden;
 `;
 
 export const ChildStyle = styled.div`
@@ -35,9 +37,30 @@ export const ChildStyle = styled.div`
   width: 100px;
   border-radius: 7px;
 
-  /* position: absolute;
-  top: 0;
-  left: 0; */
+  position: ${({ gameStart }) => (gameStart ? "absolute" : "relative")};
+  top: ${({ gameStart }) => (gameStart ? "-60px" : "0")};
+  left: ${({ gameStart }) => (gameStart ? "-60px" : "0")};
+ }
+
+ .scaleNewTile {
+  opacity: 0;
+  transform: scale(0);
+  animation: ${({ newTile }) => newTile && `scaleTile .2s  .3s forwards`};
+
+  @keyframes scaleTile {
+   0% {
+    opacity: 0;
+    transform: scale(0);
+   }
+   80% {
+    opacity: 1;
+    transform: scale(1.1);
+   }
+   100% {
+    opacity: 1;
+    transform: scale(1);
+   }
+  }
  }
 
  .tile0 {
