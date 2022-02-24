@@ -35,10 +35,9 @@ export const ChildStyle = styled.div`
   width: 100px;
   border-radius: 7px;
 
-  position: absolute;
-  /* top: 0;
+  /* position: absolute;
+  top: 0;
   left: 0; */
-  transition: all 0.5s ease 1s;
  }
 
  .tile0 {
