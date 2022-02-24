@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ThemeProvider } from "styled-components";
 import { Button } from "./components/Button";
 import { GameContainer } from "./components/GameContainer";
+import { GameHeader } from "./components/GameHeader";
 import { GlobalComponents } from "./components/styles/GlobalComponents";
 import { darkTheme } from "./components/styles/Theme";
 import { gameInit, updateBlock } from "./utils";
@@ -26,6 +27,9 @@ const App = () => {
 
  // checks if the user has pressed any key yet
  const [start, setStart] = useState(false);
+
+ // track score of user
+ const [userScore, setUserScore] = useState(0);
 
  // hold the state of game, if no more possible moves left, set to true
  const [endGame, setEndGame] = useState(false);
@@ -78,6 +82,7 @@ const App = () => {
   <ThemeProvider theme={darkTheme}>
    <GlobalComponents />
    <div className="App">
+    <GameHeader score={userScore} />
     <GameContainer arr={arr} start={start} endGame={endGame} handleReset={handleReset} />
     <Button onClick={handleReset} />
    </div>

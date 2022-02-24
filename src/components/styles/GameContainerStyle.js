@@ -8,7 +8,7 @@ export const GameContainerStyle = styled.div`
  grid-column-gap: 0px;
  grid-row-gap: 0px;
 
- margin: 200px auto;
+ margin: auto;
  width: 480px;
  height: 480px;
  padding: 5px;
