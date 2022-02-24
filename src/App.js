@@ -6,6 +6,20 @@ import { GlobalComponents } from "./components/styles/GlobalComponents";
 import { darkTheme } from "./components/styles/Theme";
 import { gameInit, updateBlock } from "./utils";
 
+/*
+
+Add state to hold highest score
+use local storage to save the score
+update score on both current and highest if current score is higher than highest
+
+** pass the state in the overlay **
+
+add overlay to show how to play the game
+
+fix scrolling issue when arrow keys are pressed
+
+*/
+
 const App = () => {
  // holds the data for game logic
  const [arr, setArr] = useState([]);
@@ -16,7 +30,10 @@ const App = () => {
  // hold the state of game, if no more possible moves left, set to true
  const [endGame, setEndGame] = useState(false);
 
- const handleReset = () => setArr(gameInit());
+ const handleReset = () => {
+  setArr(gameInit());
+  setEndGame(false);
+ };
 
  useEffect(() => {
   // if first render, then initialize the game
@@ -32,6 +49,9 @@ const App = () => {
 
  const handleKeyDown = (event) => {
   setStart(true);
+
+  if (endGame) return;
+
   switch (event.keyCode) {
    case 37: // left || A
    case 65:
@@ -59,7 +79,6 @@ const App = () => {
    <GlobalComponents />
    <div className="App">
     <GameContainer arr={arr} start={start} endGame={endGame} handleReset={handleReset} />
-
     <Button onClick={handleReset} />
    </div>
   </ThemeProvider>

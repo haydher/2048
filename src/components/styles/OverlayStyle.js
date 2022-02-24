@@ -1,17 +1,23 @@
 import styled from "styled-components";
 
 export const OverlayStyle = styled.div`
+ background-color: rgba(115, 108, 102, 0.9);
  position: absolute;
  display: flex;
  flex-direction: column;
  justify-content: center;
  align-content: center;
-
- background-color: rgba(115, 108, 102, 0.9);
  width: 100%;
  height: 100%;
-
+ opacity: 0;
+ animation: fade-in 0.2s forwards;
  z-index: 100;
+
+ @keyframes fade-in {
+  to {
+   opacity: 1;
+  }
+ }
 
  h1,
  p {

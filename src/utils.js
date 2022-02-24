@@ -201,15 +201,24 @@ const gameOver = (arr) => {
  // check if each box is filled
  const checkGameEnd = arr.every((obj) => obj.fill === true);
 
- // check bottom and right only, if right side is not match, no need to check left on the next loop since its already not the same
-
- // return if any of the elements have a neighbor to avoid running extra loops
-
  let endGame = false;
 
+ // check bottom and right only, if right side is not match, no need to check left on the next loop since its already not the same
+ // return if any of the elements have a neighbor to avoid running extra loops
  if (checkGameEnd) {
-  for (let i = 0; i < 12; i++) {
-   if ((arr[i + 1].number === arr[i].number || arr[i + 4].number === arr[i].number) && i !== 3 && i !== 7 && i !== 11) {
+  for (let i = 0; i < 16; i++) {
+   if (
+    (arr[i + 1]?.number === arr[i]?.number || arr[i + 4]?.number === arr[i]?.number) &&
+    i !== 3 &&
+    i !== 7 &&
+    i !== 11
+   ) {
+    endGame = false;
+    break;
+   } else if ((i === 3 || i === 7 || i === 11) && arr[i + 4]?.number === arr[i]?.number) {
+    endGame = false;
+    break;
+   } else if (i > 11 && arr[i + 1]?.number === arr[i]?.number) {
     endGame = false;
     break;
    } else endGame = true;
