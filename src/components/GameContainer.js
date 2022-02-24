@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChildStyle, GameContainerStyle } from "./styles/GameContainerStyle";
 import { AnimateKeyframes } from "react-simple-animate";
+import { Overlay } from "./Overlay";
 
-export const GameContainer = ({ arr, start }) => {
+export const GameContainer = ({ arr, start, endGame, handleReset }) => {
  // get the ref of parent element to calculate the top/left offset of each tile to later move them
  const childContainerRef = useRef(null);
 
@@ -11,6 +12,7 @@ export const GameContainer = ({ arr, start }) => {
  useEffect(() => {
   let box = childContainerRef.current && childContainerRef.current.children;
 
+  // hold the offsets of each element
   let tempArr = [];
   if (tempArr.length <= 0 && elemOffset.length <= 0) {
    for (let index = 0; index < box.length; index++) {
@@ -36,26 +38,24 @@ export const GameContainer = ({ arr, start }) => {
    `transform: translate(${elemOffset[elem.id - 1]?.left + 120}px, ${elemOffset[elem.id - 1]?.top + 120}px)`,
   ];
  };
+
+ // get the classes for tiles
+ // it cleans the code rather than putting it directly inline with div
+ const tileDivClasses = (elem) => {
+  if (elem.tilesMerge) return `childFill tile${elem.number} tilesMerge`;
+  if (elem.newTile) return `childFill tile${elem.number} scaleNewTile`;
+  return `childFill tile${elem.number}`;
+ };
+
  return (
   <GameContainerStyle ref={childContainerRef}>
+   <Overlay handleReset={handleReset} />
    {arr.length > 0 &&
     arr.map((elem, index) => (
-     <ChildStyle key={index} gameStart={start} newTile={elem.newTile}>
+     <ChildStyle key={index} gameStart={start} newTile={elem.newTile} tilesMerge={elem.tilesMerge}>
       {elem.fill && (
-       <AnimateKeyframes
-        play
-        fillMode="forwards"
-        easeType="ease-in"
-        duration={0.2}
-        keyframes={getTransform(elem)}
-        // keyframes={[
-        //  `transform: translate(${elemOffset[elem.oldIndex]?.left + 120}px, ${elemOffset[elem.oldIndex]?.top + 120}px)`,
-        //  `transform: translate(${elemOffset[index]?.left + 120}px, ${elemOffset[index]?.top + 120}px)`,
-        // ]}
-       >
-        <div className={elem.newTile ? `childFill tile${elem.number} scaleNewTile` : `childFill tile${elem.number}`}>
-         {elem.number}
-        </div>
+       <AnimateKeyframes play fillMode="forwards" easeType="ease-in" duration={0.2} keyframes={getTransform(elem)}>
+        <div className={tileDivClasses(elem)}>{elem.number}</div>
        </AnimateKeyframes>
       )}
      </ChildStyle>

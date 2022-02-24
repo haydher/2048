@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { ThemeProvider } from "styled-components";
+import { Button } from "./components/Button";
 import { GameContainer } from "./components/GameContainer";
+import { GlobalComponents } from "./components/styles/GlobalComponents";
 import { darkTheme } from "./components/styles/Theme";
 import { gameInit, updateBlock } from "./utils";
 
@@ -10,6 +12,9 @@ const App = () => {
 
  // checks if the user has pressed any key yet
  const [start, setStart] = useState(false);
+
+ // hold the state of game, if no more possible moves left, set to true
+ const [endGame, setEndGame] = useState(false);
 
  const handleReset = () => setArr(gameInit());
 
@@ -30,20 +35,19 @@ const App = () => {
   switch (event.keyCode) {
    case 37: // left || A
    case 65:
-    updateBlock(arr, setArr, "left");
+    updateBlock(arr, setArr, setEndGame, "left");
     break;
    case 38: // up || W
    case 87:
-    updateBlock(arr, setArr, "up");
-
+    updateBlock(arr, setArr, setEndGame, "up");
     break;
    case 39: // right || D
    case 68:
-    updateBlock(arr, setArr, "right");
+    updateBlock(arr, setArr, setEndGame, "right");
     break;
    case 40: // down || S
    case 83:
-    updateBlock(arr, setArr, "down");
+    updateBlock(arr, setArr, setEndGame, "down");
     break;
    default:
     console.log(`Default`);
@@ -52,11 +56,11 @@ const App = () => {
 
  return (
   <ThemeProvider theme={darkTheme}>
-   {/* <GlobalComponents /> */}
+   <GlobalComponents />
    <div className="App">
-    <GameContainer arr={arr} start={start} />
+    <GameContainer arr={arr} start={start} endGame={endGame} handleReset={handleReset} />
 
-    <button onClick={handleReset}>Reset</button>
+    <Button onClick={handleReset} />
    </div>
   </ThemeProvider>
  );

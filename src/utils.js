@@ -2,7 +2,8 @@ const gameInit = () => {
  const initialGameArr = [];
 
  const initRandNum = new Set();
- for (let i = 0; i < 2; i++) {
+
+ while (initRandNum.size < 2) {
   initRandNum.add(getRandNum(1, 16));
  }
 
@@ -14,6 +15,7 @@ const gameInit = () => {
    oldIndex: i,
    lastKey: "",
    newTile: true,
+   tilesMerge: false,
   });
  }
  return initialGameArr;
@@ -27,7 +29,7 @@ const getRandNum = (minNum, maxNum) => {
  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-const updateBlock = (arr, setArr, key) => {
+const updateBlock = (arr, setArr, setEndGame, key) => {
  // copy of the array to mutate
  const updatedArr = [...arr]; // output [{...}, {...}, {...}]
 
@@ -39,6 +41,12 @@ const updateBlock = (arr, setArr, key) => {
 
  // get the ids of active boxes
  arr.filter((obj) => obj.fill === true && filledBoxID.push(obj.id));
+
+ // set new tile to false so the tiles dont animate after pressing a key
+ for (let i = 0; i < updatedArr.length; i++) {
+  updatedArr[i]["newTile"] = false;
+  updatedArr[i]["tilesMerge"] = false;
+ }
 
  // sort array descending so it loops over right/down first
  if (key === "right" || key === "down") filledBoxID.sort((a, b) => b - a);
@@ -78,6 +86,9 @@ const updateBlock = (arr, setArr, key) => {
    // mark the new box active
    updatedArr[value - 1]["fill"] = true;
 
+   // set the new tile for the combined tile to true to show animation
+   updatedArr[value - 1]["tilesMerge"] = true;
+
    // update if array changed
    changeState = true;
   }
@@ -103,10 +114,6 @@ const updateBlock = (arr, setArr, key) => {
   updatedArr[lastIndex]["oldIndex"] = id - 1;
  }
 
- for (let i = 0; i < updatedArr.length; i++) {
-  updatedArr[i]["newTile"] = false;
- }
-
  // if nothing changed then return without changing the state
  if (!changeState) return;
 
@@ -126,6 +133,9 @@ const updateBlock = (arr, setArr, key) => {
  updatedArr[newBox - 1]["fill"] = true;
  updatedArr[newBox - 1]["number"] = Math.round(Math.random()) === 0 ? 2 : 4;
  updatedArr[newBox - 1]["newTile"] = true;
+
+ // if game is done
+ if (gameOver(updatedArr)) setEndGame(true);
 
  // register the last key
  updatedArr.forEach((elem) => (elem.lastKey = key));
@@ -184,6 +194,29 @@ const movementLogic = (arr, value, key, id) => {
 
  // return updated array
  return [lastIndex, sameValues, value];
+};
+
+// check if the game is done
+const gameOver = (arr) => {
+ // check if each box is filled
+ const checkGameEnd = arr.every((obj) => obj.fill === true);
+
+ // check bottom and right only, if right side is not match, no need to check left on the next loop since its already not the same
+
+ // return if any of the elements have a neighbor to avoid running extra loops
+
+ let endGame = false;
+
+ if (checkGameEnd) {
+  for (let i = 0; i < 12; i++) {
+   if ((arr[i + 1].number === arr[i].number || arr[i + 4].number === arr[i].number) && i !== 3 && i !== 7 && i !== 11) {
+    endGame = false;
+    break;
+   } else endGame = true;
+  }
+ }
+
+ return endGame;
 };
 
 // not used atm
