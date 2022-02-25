@@ -29,7 +29,10 @@ const getRandNum = (minNum, maxNum) => {
  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-const updateBlock = (arr, setArr, setEndGame, key) => {
+const updateBlock = (arr, setArr, setEndGame, setUserScore, key) => {
+ // keep track of user score after each move
+ let userScore = 0;
+
  // copy of the array to mutate
  const updatedArr = [...arr]; // output [{...}, {...}, {...}]
 
@@ -79,6 +82,9 @@ const updateBlock = (arr, setArr, setEndGame, key) => {
    // combine the two boxes
    // adds its own value to itself to double to points
    updatedArr[value - 1]["number"] += updatedArr[value - 1]["number"];
+
+   // update the user score
+   userScore += updatedArr[value - 1]["number"];
 
    // mark the current box false
    updatedArr[id - 1]["fill"] = false;
@@ -133,6 +139,9 @@ const updateBlock = (arr, setArr, setEndGame, key) => {
  updatedArr[newBox - 1]["fill"] = true;
  updatedArr[newBox - 1]["number"] = Math.round(Math.random()) === 0 ? 2 : 4;
  updatedArr[newBox - 1]["newTile"] = true;
+
+ //update the user score state
+ setUserScore((oldScore) => (oldScore += userScore));
 
  // if game is done
  if (gameOver(updatedArr)) setEndGame(true);

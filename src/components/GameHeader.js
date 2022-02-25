@@ -1,8 +1,7 @@
-import React from "react";
 import { Button } from "./Button";
 import { GameHeaderStyle } from "./styles/GameHeaderStyle";
 
-export const GameHeader = ({ score, handleReset }) => {
+export const GameHeader = ({ score, handleReset, highScore }) => {
  return (
   <GameHeaderStyle>
    <div className="header">
@@ -19,7 +18,7 @@ export const GameHeader = ({ score, handleReset }) => {
      </div>
      <div className="score">
       <p>High Score</p>
-      <h1>{score}</h1>
+      <h1>{highScore <= score ? score : highScore}</h1>
      </div>
     </div>
    </div>

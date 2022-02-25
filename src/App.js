@@ -40,12 +40,26 @@ const App = () => {
  // hold the state of game, if no more possible moves left, set to true
  const [endGame, setEndGame] = useState(false);
 
+ // track user high score
+ const [highScore, setHighScore] = useState();
+
  const handleReset = () => {
   setArr(gameInit());
   setEndGame(false);
+  // update the high score in local storage
+  highScore < userScore && localStorage.setItem("highScore", userScore);
+  setUserScore(0);
  };
 
  useEffect(() => {
+  // get the high score from local storage
+  localStorage.getItem("highScore") != null
+   ? setHighScore(parseInt(localStorage.getItem("highScore")))
+   : setHighScore(0);
+
+  // set the score as high score at the end of the game
+  endGame && localStorage.setItem("highScore", userScore);
+
   // if first render, then initialize the game
   arr.length <= 0 && setArr(gameInit());
 
@@ -55,7 +69,7 @@ const App = () => {
   return () => {
    window.removeEventListener("keydown", handleKeyDown);
   };
- }, [arr, popup]);
+ }, [arr, popup, userScore, endGame]);
 
  const handleKeyDown = (event) => {
   // prevent user screen from scrolling when arrow keys are pressed
@@ -67,19 +81,19 @@ const App = () => {
   switch (event.keyCode) {
    case 37: // left || A
    case 65:
-    updateBlock(arr, setArr, setEndGame, "left");
+    updateBlock(arr, setArr, setEndGame, setUserScore, "left");
     break;
    case 38: // up || W
    case 87:
-    updateBlock(arr, setArr, setEndGame, "up");
+    updateBlock(arr, setArr, setEndGame, setUserScore, "up");
     break;
    case 39: // right || D
    case 68:
-    updateBlock(arr, setArr, setEndGame, "right");
+    updateBlock(arr, setArr, setEndGame, setUserScore, "right");
     break;
    case 40: // down || S
    case 83:
-    updateBlock(arr, setArr, setEndGame, "down");
+    updateBlock(arr, setArr, setEndGame, setUserScore, "down");
     break;
    default:
     console.log(`Default`);
@@ -91,7 +105,7 @@ const App = () => {
    <GlobalComponents />
    <div className="App">
     {popup && <Popup setPopup={setPopup} />}
-    <GameHeader score={userScore} handleReset={handleReset} />
+    <GameHeader score={userScore} highScore={highScore} handleReset={handleReset} />
     <GameContainer arr={arr} start={start} endGame={endGame} handleReset={handleReset} />
     <Guide />
     <Footer />
