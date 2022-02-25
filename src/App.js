@@ -58,6 +58,8 @@ const App = () => {
  }, [arr, popup]);
 
  const handleKeyDown = (event) => {
+  // prevent user screen from scrolling when arrow keys are pressed
+  event.preventDefault();
   setStart(true);
 
   if (endGame) return;
