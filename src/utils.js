@@ -4,7 +4,7 @@ const gameInit = () => {
  // get two random boxes to start the game with
  const initRandNum = new Set();
  while (initRandNum.size < 2) {
-  initRandNum.add(getRandNum(1, 16));
+  initRandNum.add(getRandNum(0, 15));
  }
 
  // initialize the object
@@ -99,7 +99,7 @@ const updateBlock = (gameData, setGameData, setEndGame, setUserScore, key) => {
    stateChanged = true;
   }
   // if it moved then updates boxes
-  else if (lastIndex != id) {
+  else if (lastIndex !== id) {
    // mark the current box false
    updatedArr[id].tileActive = false;
 
@@ -160,22 +160,16 @@ const movementLogic = (gameData, value, key, id) => {
    : key === "down"
    ? value < 12
    : key === "left"
-   ? value > 0 && value != 0 && value != 4 && value != 8 && value != 12
+   ? value !== 0 && value !== 4 && value !== 8 && value !== 12
    : key === "right"
-   ? value < 15 && value != 3 && value != 7 && value != 11 && value != 15
+   ? value !== 3 && value !== 7 && value !== 11 && value !== 15
    : false
  ) {
   // how many indexes to move after each loop
-  value =
-   key === "up"
-    ? value - 4
-    : key === "down"
-    ? value + 4
-    : key === "left"
-    ? value - 1
-    : key === "right"
-    ? value + 1
-    : value;
+  if (key === "up") value -= 4;
+  if (key === "down") value += 4;
+  if (key === "left") value -= 1;
+  if (key === "right") value += 1;
 
   // empty boxes, keep looping, store index before collision
   if (gameData[value].tileActive === false) lastIndex = value;
@@ -185,16 +179,9 @@ const movementLogic = (gameData, value, key, id) => {
    break;
   } else break;
 
-  //
   // for left and right, check boundaries
-  if (
-   key === "left"
-    ? value === 0 || value === 4 || value === 8 || value === 12
-    : key === "right"
-    ? value === 3 || value === 7 || value === 11 || value === 15
-    : false
-  )
-   break;
+  if (key === "left" && (value === 0 || value === 4 || value === 8 || value === 12)) break;
+  if (key === "right" && (value === 3 || value === 7 || value === 11 || value === 15)) break;
  }
 
  // return updated array

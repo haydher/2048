@@ -37,20 +37,18 @@ const App = () => {
  };
 
  useEffect(() => {
+  // if first render, then initialize the game
+  gameData.length <= 0 && setGameData(gameInit());
+
   // get the high score from local storage
-  localStorage.getItem("highScore") != null
-   ? setHighScore(parseInt(localStorage.getItem("highScore")))
-   : setHighScore(0);
+  let getHighScore = localStorage.getItem("highScore");
+  getHighScore !== null ? setHighScore(parseInt(getHighScore)) : setHighScore(0);
 
   // set the score as high score at the end of the game
   endGame && localStorage.setItem("highScore", userScore);
 
-  // if first render, then initialize the game
-  gameData.length <= 0 && setGameData(gameInit());
-
   // track the keypress to move tiles
   window.addEventListener("keydown", handleKeyDown);
-
   return () => {
    window.removeEventListener("keydown", handleKeyDown);
   };
