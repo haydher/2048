@@ -3,7 +3,7 @@ import { ChildStyle, GameContainerStyle } from "./styles/GameContainerStyle";
 import { AnimateKeyframes } from "react-simple-animate";
 import { Overlay } from "./Overlay";
 
-export const GameContainer = ({ arr, start, endGame, score, handleReset }) => {
+export const GameContainer = ({ gameData, start, endGame, score, handleReset }) => {
  // get the ref of parent element to calculate the top/left offset of each tile to later move them
  const childContainerRef = useRef(null);
 
@@ -23,7 +23,7 @@ export const GameContainer = ({ arr, start, endGame, score, handleReset }) => {
    }
    setElemOffset(tempArr);
   }
- }, [childContainerRef, arr]);
+ }, [childContainerRef, gameData]);
 
  // calculate the movement of the tile
  const getTransform = (elem) => {
@@ -35,7 +35,7 @@ export const GameContainer = ({ arr, start, endGame, score, handleReset }) => {
   // before the tiles had time to animate
   return [
    `transform: translate(${elemOffset[elem.oldIndex]?.left + 120}px, ${elemOffset[elem.oldIndex]?.top + 120}px)`,
-   `transform: translate(${elemOffset[elem.id - 1]?.left + 120}px, ${elemOffset[elem.id - 1]?.top + 120}px)`,
+   `transform: translate(${elemOffset[elem.id]?.left + 120}px, ${elemOffset[elem.id]?.top + 120}px)`,
   ];
  };
 
@@ -50,8 +50,8 @@ export const GameContainer = ({ arr, start, endGame, score, handleReset }) => {
  return (
   <GameContainerStyle ref={childContainerRef}>
    {endGame && <Overlay handleReset={handleReset} score={score} />}
-   {arr.length > 0 &&
-    arr.map((elem, index) => (
+   {gameData.length > 0 &&
+    gameData.map((elem, index) => (
      <ChildStyle key={index} gameStart={start} newTile={elem.newTile} tilesMerge={elem.tilesMerge}>
       {elem.fill && (
        <AnimateKeyframes play fillMode="forwards" easeType="ease-in" duration={0.2} keyframes={getTransform(elem)}>

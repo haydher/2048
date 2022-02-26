@@ -9,8 +9,8 @@ const gameInit = () => {
 
  for (let i = 0; i < 16; i++) {
   initialGameArr.push({
-   id: i + 1,
-   fill: [...initRandNum].includes(i + 1) && true,
+   id: i,
+   fill: [...initRandNum].includes(i) && true,
    number: Math.round(Math.random()) === 0 ? 2 : 4,
    oldIndex: i,
    lastKey: "",
@@ -25,7 +25,6 @@ const getRandNum = (minNum, maxNum) => {
  const min = parseInt(minNum) || 0;
  const max = parseInt(maxNum) || 30;
 
- // const randStrRange = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
@@ -64,7 +63,7 @@ const updateBlock = (arr, setArr, setEndGame, setUserScore, key) => {
 
   // last index before the last iteration of the while loop
   // value = id of obj, starts with 1, to get index, subtract 1
-  let lastIndex = value - 1;
+  let lastIndex = value;
 
   // if two boxes are same, use it to combine them
   let sameValues = false;
@@ -81,64 +80,64 @@ const updateBlock = (arr, setArr, setEndGame, setUserScore, key) => {
   if (sameValues) {
    // combine the two boxes
    // adds its own value to itself to double to points
-   updatedArr[value - 1]["number"] += updatedArr[value - 1]["number"];
+   updatedArr[value]["number"] += updatedArr[value]["number"];
 
    // update the user score
-   userScore += updatedArr[value - 1]["number"];
+   userScore += updatedArr[value]["number"];
 
    // mark the current box false
-   updatedArr[id - 1]["fill"] = false;
+   updatedArr[id]["fill"] = false;
 
    // mark the new box active
-   updatedArr[value - 1]["fill"] = true;
+   updatedArr[value]["fill"] = true;
 
    // set the new tile for the combined tile to true to show animation
-   updatedArr[value - 1]["tilesMerge"] = true;
+   updatedArr[value]["tilesMerge"] = true;
 
    // update if array changed
    changeState = true;
   }
   // if it moved then updates boxes
-  else if (lastIndex != id - 1) {
+  else if (lastIndex != id) {
    // mark the current box false
-   updatedArr[id - 1]["fill"] = false;
+   updatedArr[id]["fill"] = false;
 
    // mark the new box (obj) active
    updatedArr[lastIndex]["fill"] = true;
 
    // update the number of obj where the box has moved to the new number
-   updatedArr[lastIndex]["number"] = updatedArr[id - 1]["number"];
+   updatedArr[lastIndex]["number"] = updatedArr[id]["number"];
 
    // reset the oldIndex of the old box
-   updatedArr[id - 1]["oldIndex"] = id - 1;
+   updatedArr[id]["oldIndex"] = id;
 
    // update if array changed
    changeState = true;
   }
 
   // update the index of old array
-  updatedArr[lastIndex]["oldIndex"] = id - 1;
+  updatedArr[lastIndex]["oldIndex"] = id;
  }
 
  // if nothing changed then return without changing the state
  if (!changeState) return;
 
  // make a new active box
- let newBox = 1;
+ let newBox = 0;
 
  // recursively keep getting new numbers if the random number is already taken by another active box
  (function getNewBox() {
   // update the variable with new number for active index
-  newBox = getRandNum(1, 16);
+  newBox = getRandNum(0, 15);
   // if number taken, redo it
-  if (updatedArr[newBox - 1].fill === true) getNewBox();
+  if (updatedArr[newBox].fill === true) getNewBox();
   return;
  })();
 
  // make a new box after move
- updatedArr[newBox - 1]["fill"] = true;
- updatedArr[newBox - 1]["number"] = Math.round(Math.random()) === 0 ? 2 : 4;
- updatedArr[newBox - 1]["newTile"] = true;
+ updatedArr[newBox]["fill"] = true;
+ updatedArr[newBox]["number"] = Math.round(Math.random()) === 0 ? 2 : 4;
+ updatedArr[newBox]["newTile"] = true;
 
  //update the user score state
  setUserScore((oldScore) => (oldScore += userScore));
@@ -155,18 +154,18 @@ const updateBlock = (arr, setArr, setEndGame, setUserScore, key) => {
 
 // compute how many boxes to move, logic of movements
 const movementLogic = (arr, value, key, id) => {
- let lastIndex = value - 1;
+ let lastIndex = value;
  let sameValues = false;
 
  while (
   key === "up"
-   ? value > 4
+   ? value > 3
    : key === "down"
-   ? value < 13
+   ? value < 12
    : key === "left"
-   ? value > 1 && value != 1 && value != 5 && value != 9 && value != 13
+   ? value > 0 && value != 0 && value != 4 && value != 8 && value != 12
    : key === "right"
-   ? value < 16 && value != 4 && value != 8 && value != 12 && value != 16
+   ? value < 15 && value != 3 && value != 7 && value != 11 && value != 15
    : false
  ) {
   // how many boxes to move after each loop
@@ -182,9 +181,9 @@ const movementLogic = (arr, value, key, id) => {
     : value;
 
   // empty boxes, keep looping, store index before collision
-  if (arr[value - 1].fill === false) lastIndex = value - 1;
+  if (arr[value].fill === false) lastIndex = value;
   // if collision, check if same number to combine
-  else if (arr[value - 1].number === arr[id - 1].number) {
+  else if (arr[value].number === arr[id].number) {
    sameValues = true;
    break;
   } else break;
@@ -193,9 +192,9 @@ const movementLogic = (arr, value, key, id) => {
   // for left and right, check boundaries
   if (
    key === "left"
-    ? value === 1 || value === 5 || value === 9 || value === 13
+    ? value === 0 || value === 4 || value === 8 || value === 12
     : key === "right"
-    ? value === 4 || value === 8 || value === 12 || value === 16
+    ? value === 3 || value === 7 || value === 11 || value === 15
     : false
   )
    break;
@@ -246,11 +245,11 @@ const getTransform = (elem, elemOffset) => {
  if (elem.lastKey == "left")
   tempArr = [`transform: translate(${elemOffset[elem.oldIndex]?.left}px, 0px)`, `transform: translate(0px, 0px)`];
  else if (elem.lastKey == "right")
-  tempArr = [`transform: translate(${-elemOffset[elem.id - 1]?.left}px, 0px)`, `transform: translate(0px, 0px)`];
+  tempArr = [`transform: translate(${-elemOffset[elem.id]?.left}px, 0px)`, `transform: translate(0px, 0px)`];
  if (elem.lastKey == "up")
   tempArr = [`transform: translate(0px, ${elemOffset[elem.oldIndex]?.top}px)`, `transform: translate(0px, 0px)`];
  else if (elem.lastKey == "down")
-  tempArr = [`transform: translate(0px, -${elemOffset[elem.id - 1]?.top}px)`, `transform: translate(0px, 0px)`];
+  tempArr = [`transform: translate(0px, -${elemOffset[elem.id]?.top}px)`, `transform: translate(0px, 0px)`];
 
  return tempArr;
 };
