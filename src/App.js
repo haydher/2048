@@ -9,6 +9,11 @@ import { GlobalComponents } from "./components/styles/GlobalComponents";
 import { darkTheme } from "./components/styles/Theme";
 import { gameInit, updateBlock } from "./utils";
 
+/*
+
+elements disappeared when no tiles moved initially
+
+*/
 const App = () => {
  // holds the data for game logic
  const [gameData, setGameData] = useState([]);
@@ -55,8 +60,7 @@ const App = () => {
  }, [gameData, popup, userScore, endGame]);
 
  const handleKeyDown = (event) => {
-  setStart(true);
-
+  setStart((oldVal) => (oldVal = true));
   if (endGame) return;
 
   switch (event.keyCode) {
@@ -80,6 +84,8 @@ const App = () => {
     updateBlock(gameData, setGameData, setEndGame, setUserScore, "down");
     event.preventDefault();
     break;
+   default:
+    setStart((oldVal) => (oldVal = false));
   }
  };
 
