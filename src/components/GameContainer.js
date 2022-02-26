@@ -53,7 +53,7 @@ export const GameContainer = ({ gameData, start, endGame, score, handleReset }) 
    {gameData.length > 0 &&
     gameData.map((elem, index) => (
      <ChildStyle key={index} gameStart={start} newTile={elem.newTile} tilesMerge={elem.tilesMerge}>
-      {elem.fill && (
+      {elem.tileActive && (
        <AnimateKeyframes play fillMode="forwards" easeType="ease-in" duration={0.2} keyframes={getTransform(elem)}>
         <div className={tileDivClasses(elem)}>{elem.number}</div>
        </AnimateKeyframes>
