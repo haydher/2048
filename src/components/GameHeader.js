@@ -1,7 +1,7 @@
 import { Button } from "./Button";
 import { GameHeaderStyle } from "./styles/GameHeaderStyle";
 
-export const GameHeader = ({ score, handleReset, highScore }) => {
+export const GameHeader = ({ score, handleReset, highScore, setPopup }) => {
  return (
   <GameHeaderStyle>
    <div className="header">
@@ -24,7 +24,7 @@ export const GameHeader = ({ score, handleReset, highScore }) => {
    </div>
 
    <div className="buttons">
-    <p>How to play</p>
+    <p onClick={() => setPopup(true)}>How to play</p>
     <Button onClick={handleReset} />
    </div>
   </GameHeaderStyle>

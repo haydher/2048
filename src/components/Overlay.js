@@ -1,12 +1,12 @@
 import { Button } from "./Button";
 import { OverlayStyle } from "./styles/OverlayStyle";
 
-export const Overlay = ({ handleReset }) => {
+export const Overlay = ({ handleReset, score }) => {
  return (
   <OverlayStyle>
    <h1>Game Over!</h1>
    <p>
-    Highest score: <span>12345</span>
+    Score: <span>{score}</span>
    </p>
    <Button onClick={handleReset} />
   </OverlayStyle>

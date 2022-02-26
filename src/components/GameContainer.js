@@ -3,7 +3,7 @@ import { ChildStyle, GameContainerStyle } from "./styles/GameContainerStyle";
 import { AnimateKeyframes } from "react-simple-animate";
 import { Overlay } from "./Overlay";
 
-export const GameContainer = ({ arr, start, endGame, handleReset }) => {
+export const GameContainer = ({ arr, start, endGame, score, handleReset }) => {
  // get the ref of parent element to calculate the top/left offset of each tile to later move them
  const childContainerRef = useRef(null);
 
@@ -49,7 +49,7 @@ export const GameContainer = ({ arr, start, endGame, handleReset }) => {
 
  return (
   <GameContainerStyle ref={childContainerRef}>
-   {endGame && <Overlay handleReset={handleReset} />}
+   {endGame && <Overlay handleReset={handleReset} score={score} />}
    {arr.length > 0 &&
     arr.map((elem, index) => (
      <ChildStyle key={index} gameStart={start} newTile={elem.newTile} tilesMerge={elem.tilesMerge}>

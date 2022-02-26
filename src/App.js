@@ -34,14 +34,14 @@ const App = () => {
  // track score of user
  const [userScore, setUserScore] = useState(0);
 
+ // track user high score
+ const [highScore, setHighScore] = useState();
+
  // show popup
  const [popup, setPopup] = useState(localStorage.getItem("popup") === "false" ? false : true);
 
  // hold the state of game, if no more possible moves left, set to true
  const [endGame, setEndGame] = useState(false);
-
- // track user high score
- const [highScore, setHighScore] = useState();
 
  const handleReset = () => {
   setArr(gameInit());
@@ -105,8 +105,8 @@ const App = () => {
    <GlobalComponents />
    <div className="App">
     {popup && <Popup setPopup={setPopup} />}
-    <GameHeader score={userScore} highScore={highScore} handleReset={handleReset} />
-    <GameContainer arr={arr} start={start} endGame={endGame} handleReset={handleReset} />
+    <GameHeader score={userScore} highScore={highScore} handleReset={handleReset} setPopup={setPopup} />
+    <GameContainer arr={arr} start={start} score={userScore} endGame={endGame} handleReset={handleReset} />
     <Guide />
     <Footer />
    </div>

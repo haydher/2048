@@ -63,6 +63,7 @@ export const GameHeaderStyle = styled.div`
   p {
    font-weight: 600;
    text-decoration: underline;
+   cursor: pointer;
   }
   button {
    margin: 0;
