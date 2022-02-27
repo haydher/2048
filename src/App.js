@@ -9,11 +9,6 @@ import { GlobalComponents } from "./components/styles/GlobalComponents";
 import { darkTheme } from "./components/styles/Theme";
 import { gameInit, updateBlock } from "./utils";
 
-/*
-
-elements disappeared when no tiles moved initially
-
-*/
 const App = () => {
  // holds the data for game logic
  const [gameData, setGameData] = useState([]);
@@ -60,32 +55,29 @@ const App = () => {
  }, [gameData, popup, userScore, endGame]);
 
  const handleKeyDown = (event) => {
-  setStart((oldVal) => (oldVal = true));
   if (endGame) return;
 
   switch (event.keyCode) {
    case 37: // left || A
    case 65:
-    updateBlock(gameData, setGameData, setEndGame, setUserScore, "left");
+    updateBlock(gameData, setGameData, setEndGame, setUserScore, setStart, "left");
     event.preventDefault();
     break;
    case 38: // up || W
    case 87:
-    updateBlock(gameData, setGameData, setEndGame, setUserScore, "up");
+    updateBlock(gameData, setGameData, setEndGame, setUserScore, setStart, "up");
     event.preventDefault();
     break;
    case 39: // right || D
    case 68:
-    updateBlock(gameData, setGameData, setEndGame, setUserScore, "right");
+    updateBlock(gameData, setGameData, setEndGame, setUserScore, setStart, "right");
     event.preventDefault();
     break;
    case 40: // down || S
    case 83:
-    updateBlock(gameData, setGameData, setEndGame, setUserScore, "down");
+    updateBlock(gameData, setGameData, setEndGame, setUserScore, setStart, "down");
     event.preventDefault();
     break;
-   default:
-    setStart((oldVal) => (oldVal = false));
   }
  };
 

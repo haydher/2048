@@ -28,7 +28,7 @@ const getRandNum = (minNum, maxNum) => {
  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-const updateBlock = (gameData, setGameData, setEndGame, setUserScore, key) => {
+const updateBlock = (gameData, setGameData, setEndGame, setUserScore, setStart, key) => {
  // keep track of user score after each move
  let userScore = 0;
 
@@ -144,6 +144,12 @@ const updateBlock = (gameData, setGameData, setEndGame, setUserScore, key) => {
 
  // if game is done
  if (gameOver(updatedArr)) setEndGame(true);
+
+ // set the state to start the game
+ setStart((oldVal) => {
+  if (oldVal === false) return (oldVal = true);
+  else return oldVal;
+ });
 
  // update the state with the mutated array
  setGameData(updatedArr);

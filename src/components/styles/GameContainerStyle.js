@@ -37,7 +37,7 @@ export const ChildStyle = styled.div`
   width: 100px;
   border-radius: 7px;
 
-  position: ${({ gameStart }) => (gameStart ? "absolute" : "relative")};
+  position: ${({ gameStart }) => (gameStart ? "absolute" : "static")};
   top: ${({ gameStart }) => (gameStart ? "-60px" : "0")};
   left: ${({ gameStart }) => (gameStart ? "-60px" : "0")};
  }

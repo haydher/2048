@@ -52,7 +52,7 @@ export const GameContainer = ({ gameData, start, endGame, score, handleReset }) 
    {endGame && <Overlay handleReset={handleReset} score={score} />}
    {gameData.length > 0 &&
     gameData.map((elem, index) => (
-     <ChildStyle key={index} gameStart={start} newTile={elem.newTile} tilesMerge={elem.tilesMerge}>
+     <ChildStyle key={index} elem={elem} gameStart={start} newTile={elem.newTile} tilesMerge={elem.tilesMerge}>
       {elem.tileActive && (
        <AnimateKeyframes play fillMode="forwards" easeType="ease-in" duration={0.2} keyframes={getTransform(elem)}>
         <div className={tileDivClasses(elem)}>{elem.number}</div>
