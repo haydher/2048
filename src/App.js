@@ -28,6 +28,10 @@ const App = () => {
  // hold the state of game, if no more possible moves left, set to true
  const [endGame, setEndGame] = useState(false);
 
+ // track touch events
+ const [startPos, setStartPost] = useState({});
+ const [swipedTo, setSwipeTo] = useState({});
+
  const handleReset = () => {
   setGameData(gameInit());
   setEndGame(false);
@@ -49,10 +53,39 @@ const App = () => {
 
   // track the keypress to move tiles
   window.addEventListener("keydown", handleKeyDown);
+  window.addEventListener("touchstart", handleTouchStart);
+  window.addEventListener("touchmove", handleTouchMove);
+  window.addEventListener("touchend", handleTouchEnd);
   return () => {
    window.removeEventListener("keydown", handleKeyDown);
+   window.removeEventListener("touchstart", handleTouchStart);
+   window.removeEventListener("touchmove", handleTouchMove);
+   window.removeEventListener("touchend", handleTouchEnd);
   };
- }, [gameData, popup, userScore, endGame]);
+ }, [gameData, popup, userScore, endGame, startPos, swipedTo]);
+
+ const handleTouchStart = (event) => {
+  setStartPost({
+   x: event.touches[0].clientX,
+   y: event.touches[0].clientY,
+  });
+ };
+ const handleTouchMove = (event) => {
+  setSwipeTo({
+   x: event.touches[0].clientX,
+   y: event.touches[0].clientY,
+  });
+ };
+ const handleTouchEnd = () => {
+  if (endGame) return;
+
+  if (startPos.x + 100 < swipedTo.x) updateBlock(gameData, setGameData, setEndGame, setUserScore, setStart, "right");
+  else if (startPos.x - 100 > swipedTo.x)
+   updateBlock(gameData, setGameData, setEndGame, setUserScore, setStart, "left");
+
+  if (startPos.y + 100 < swipedTo.y) updateBlock(gameData, setGameData, setEndGame, setUserScore, setStart, "down");
+  else if (startPos.y - 100 > swipedTo.y) updateBlock(gameData, setGameData, setEndGame, setUserScore, setStart, "up");
+ };
 
  const handleKeyDown = (event) => {
   if (endGame) return;
