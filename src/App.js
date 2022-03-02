@@ -65,12 +65,14 @@ const App = () => {
  }, [gameData, popup, userScore, endGame, startPos, swipedTo]);
 
  const handleTouchStart = (event) => {
+  event.preventDefault();
   setStartPost({
    x: event.touches[0].clientX,
    y: event.touches[0].clientY,
   });
  };
  const handleTouchMove = (event) => {
+  event.preventDefault();
   setSwipeTo({
    x: event.touches[0].clientX,
    y: event.touches[0].clientY,
