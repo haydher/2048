@@ -44,8 +44,8 @@ const App = () => {
   let getHighScore = localStorage.getItem("highScore");
   getHighScore !== null ? setHighScore(parseInt(getHighScore)) : setHighScore(0);
 
-  // set the score as high score at the end of the game
-  endGame && localStorage.setItem("highScore", userScore);
+  // update the high score
+  getHighScore !== null && getHighScore <= userScore && localStorage.setItem("highScore", userScore);
 
   // track the keypress to move tiles
   window.addEventListener("keydown", handleKeyDown);

@@ -2,10 +2,13 @@ const gameInit = () => {
  const initialGameArr = [];
 
  // get two random boxes to start the game with
- const initRandNum = new Set();
- while (initRandNum.size < 2) {
-  initRandNum.add(getRandNum(0, 15));
- }
+ const randNum = Math.round(Math.random());
+ const initRandNum = randNum === 1 ? [5, 10] : [6, 9];
+
+ //  const initRandNum = new Set();
+ //  while (initRandNum.size < 2) {
+ //   const randNum = getRandNum(0, 15);
+ //  }
 
  // initialize the object
  for (let i = 0; i < 16; i++) {
