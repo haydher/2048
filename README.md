@@ -1,4 +1,8 @@
-# Getting Started with Create React App
+# Clone of classic 2048 game
+
+The game is built with ReactJs for the UI changes. Follow the options below to try it out yourself.
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
